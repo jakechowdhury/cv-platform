@@ -1,0 +1,5 @@
+---
+# Add suppressions here as you triage — document the reason for each
+# Example:
+# - CKV_AWS_18   # S3 access logging — not required for personal Terraform state bucket
+skip-check: []

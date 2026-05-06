@@ -1,0 +1,28 @@
+# Secrets
+*.auto.pkrvars.hcl
+*.tfvars
+!*.tfvars.example
+*.env
+
+# OpenTofu
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfstate.lock.info
+crash.log
+
+# Terragrunt-generated files (regenerated on each run)
+terraform/k8s/provider.tf
+terraform/**/backend.tf
+
+# Packer
+packer/packer_cache/
+
+# Ansible
+ansible/inventory/hosts.ini
+*.retry
+
+# OS / IDE
+.DS_Store
+../.idea/
+*.iml
