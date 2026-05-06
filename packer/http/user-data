@@ -1,0 +1,36 @@
+#cloud-config
+autoinstall:
+  version: 1
+  locale: en_GB
+  keyboard:
+    layout: gb
+  network:
+    network:
+      version: 2
+      ethernets:
+        ens18:
+          dhcp4: true
+  storage:
+    layout:
+      name: direct
+  identity:
+    hostname: ubuntu-template
+    username: ubuntu
+    password: "${ssh_password_hash}"
+  ssh:
+    install-server: true
+    allow-pw: true
+  packages:
+    - qemu-guest-agent
+    - curl
+    - wget
+    - git
+    - htop
+    - nfs-common
+    - net-tools
+  late-commands:
+    - curtin in-target --target=/target -- systemctl enable qemu-guest-agent
+    - curtin in-target --target=/target -- apt-get clean -y
+    - rm -rf /target/etc/ssh/ssh_host_*
+    - truncate -s 0 /target/etc/machine-id
+    - curtin in-target --target=/target -- cloud-init clean

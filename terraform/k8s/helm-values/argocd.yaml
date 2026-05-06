@@ -1,0 +1,26 @@
+---
+global:
+  domain: ""
+
+server:
+  replicas: 1
+  service:
+    type: ClusterIP
+  extraArgs:
+    - --insecure
+
+repoServer:
+  replicas: 1
+
+applicationSet:
+  replicas: 1
+
+# Use single Redis, not HA
+redis-ha:
+  enabled: false
+
+redis:
+  enabled: true
+
+controller:
+  replicas: 1
