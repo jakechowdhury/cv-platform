@@ -1,0 +1,18 @@
+---
+- name: Apply common configuration to all nodes
+  hosts: k3s_cluster
+  become: true
+  roles:
+    - common
+
+- name: Bootstrap k3s init server
+  hosts: k3s_server_init
+  become: true
+  roles:
+    - k3s_server
+
+- name: Join remaining k3s servers
+  hosts: k3s_servers
+  become: true
+  roles:
+    - k3s_server

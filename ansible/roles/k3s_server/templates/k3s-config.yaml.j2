@@ -1,0 +1,8 @@
+write-kubeconfig-mode: "0600"
+disable:
+  - traefik
+cluster-init: {{ k3s_server_cluster_init | lower }}
+{% if not k3s_server_cluster_init %}
+server: "https://{{ k3s_server_init_ip }}:6443"
+token: "{{ k3s_node_token }}"
+{% endif %}

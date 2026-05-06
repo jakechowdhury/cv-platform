@@ -1,0 +1,46 @@
+---
+- name: Check if k3s is already installed
+  ansible.builtin.stat:
+    path: /usr/local/bin/k3s
+  register: k3s_binary
+
+- name: Wait for init server API to be reachable
+  ansible.builtin.wait_for:
+    host: "{{ k3s_server_init_ip }}"
+    port: 6443
+    timeout: 120
+
+- name: Download k3s install script
+  ansible.builtin.get_url:
+    url: https://get.k3s.io
+    dest: /tmp/k3s-install.sh
+    mode: '0755'
+  when: not k3s_binary.stat.exists
+
+- name: Install k3s and join existing cluster
+  ansible.builtin.command:
+    cmd: /tmp/k3s-install.sh server
+    creates: /usr/local/bin/k3s
+  environment:
+    K3S_TOKEN: "{{ k3s_node_token }}"
+    K3S_URL: "https://{{ k3s_server_init_ip }}:6443"
+    INSTALL_K3S_VERSION: "{{ k3s_server_version }}"
+  when: not k3s_binary.stat.exists
+  no_log: true
+  notify: Restart k3s
+
+- name: Wait for k3s systemd service file to exist
+  ansible.builtin.wait_for:
+    path: /etc/systemd/system/k3s.service
+    state: present
+    timeout: 120
+
+- name: Reload systemd daemon
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Ensure k3s service is enabled and running
+  ansible.builtin.systemd:
+    name: k3s
+    enabled: true
+    state: started

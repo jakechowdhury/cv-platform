@@ -1,0 +1,5 @@
+---
+k3s_server_version: "v1.29.3+k3s1"
+k3s_server_init_ip: "192.168.1.101"
+k3s_server_cluster_init: false
+k3s_server_extra_args: ""

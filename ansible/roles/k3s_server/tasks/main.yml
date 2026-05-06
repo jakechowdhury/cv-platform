@@ -1,0 +1,24 @@
+---
+- name: Create k3s config directory
+  ansible.builtin.file:
+    path: /etc/rancher/k3s
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Write k3s config
+  ansible.builtin.template:
+    src: k3s-config.yaml.j2
+    dest: /etc/rancher/k3s/config.yaml
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Run init tasks (first server node only)
+  ansible.builtin.import_tasks: init.yml
+  when: k3s_server_cluster_init | bool
+
+- name: Run join tasks (server nodes 2 and 3)
+  ansible.builtin.import_tasks: join.yml
+  when: not (k3s_server_cluster_init | bool)

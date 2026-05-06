@@ -1,0 +1,32 @@
+---
+common_timezone: "UTC"
+
+common_base_packages:
+  - curl
+  - wget
+  - git
+  - htop
+  - net-tools
+  - nfs-common
+  - ufw
+  - unattended-upgrades
+
+common_k3s_firewall_ports:
+  - port: "6443"
+    proto: "tcp"
+    comment: "K3s API server"
+  - port: "2379:2380"
+    proto: "tcp"
+    comment: "etcd client/peer (HA servers only)"
+  - port: "10250"
+    proto: "tcp"
+    comment: "Kubelet metrics"
+  - port: "8472"
+    proto: "udp"
+    comment: "Flannel VXLAN"
+  - port: "51820"
+    proto: "udp"
+    comment: "Flannel WireGuard (if enabled)"
+  - port: "30000:32767"
+    proto: "tcp"
+    comment: "k3s NodePort range"
